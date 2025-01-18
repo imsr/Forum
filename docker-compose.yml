@@ -1,0 +1,38 @@
+services:
+  web:
+    image: ghcr.io/imsr/forum
+    environment:
+      FLARUM_TITLE: Форум IMSR
+      FLARUM_DB_HOST: db
+      FLARUM_DB_DATABASE: flarum
+      FLARUM_DB_USERNAME: ${DB_USERNAME:-flarum}
+      FLARUM_DB_PASSWORD: ${DB_PASSWORD:?}
+      FLARUM_INSTALL_ADMIN_USERNAME: ${INSTALL_ADMIN_USERNAME:?}
+      FLARUM_INSTALL_ADMIN_PASSWORD: ${INSTALL_ADMIN_PASSWORD:?}
+      FLARUM_INSTALL_ADMIN_EMAIL: ${INSTALL_ADMIN_EMAIL:?}
+      FLARUM_URL: ${BASE_URL:-https://forum.imsr.su}
+    volumes:
+      - ./storage:/app/storage
+      - ./assets:/app/public/assets
+      - ./config.docker.php:/app/config.docker.php
+    ports:
+      - "127.0.0.1:${LISTEN_PORT:-20001}:80"
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mariadb:10
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:?}
+      MYSQL_USER: ${DB_USERNAME:-flarum}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?}
+      MYSQL_DATABASE: flarum
+    volumes:
+      - ./db:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      interval: 5s
+      start_period: 10s
+      timeout: 20s
+      retries: 10

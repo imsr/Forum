@@ -1,0 +1,49 @@
+#!/bin/bash
+
+set -e
+
+mkdir -p storage/cache \
+    storage/formatter \
+    storage/less \
+    storage/locale \
+    storage/logs \
+    storage/sessions \
+    storage/tmp \
+    storage/views \
+    assets/avatars
+
+if [ -e 'storage/install.lock' ]; then
+    echo "Already installed"
+    cp config.docker.php config.php
+else
+    echo "Installing"
+
+    rm -f config.php
+
+    cfg=install.yml
+
+    echo "debug: false" >> $cfg
+    echo "baseUrl: ${FLARUM_URL:-http://localhost}" >> $cfg
+    echo "databaseConfiguration:" >> $cfg
+    echo "  driver: mysql" >> $cfg
+    echo "  host: ${FLARUM_DB_HOST:-db}" >> $cfg
+    echo "  database: ${FLARUM_DB_DATABASE:-flarum}" >> $cfg
+    echo "  username: ${FLARUM_DB_USERNAME:-flarum}" >> $cfg
+    echo "  password: ${FLARUM_DB_PASSWORD:-flarum}" >> $cfg
+    echo "  prefix: ${FLARUM_DB_PREFIX}" >> $cfg
+    echo "  port: ${FLARUM_DB_PORT:-3306}" >> $cfg
+    echo "adminUser:" >> $cfg
+    echo "  username: ${FLARUM_INSTALL_ADMIN_USERNAME}" >> $cfg
+    echo "  password: ${FLARUM_INSTALL_ADMIN_PASSWORD}" >> $cfg
+    echo "  email: ${FLARUM_INSTALL_ADMIN_EMAIL}" >> $cfg
+    echo "settings:" >> $cfg
+    echo "  forum_title: ${FLARUM_TITLE:-Flarum}" >> $cfg
+
+    php flarum install -f $cfg
+
+    rm $cfg
+
+    touch storage/install.lock
+fi
+
+apache2-foreground
