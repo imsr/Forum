@@ -22,7 +22,10 @@ RUN composer require \
   flarum-lang/russian \
   fof/upload \
   fof/nightmode \
-  fof/linguist
+  fof/linguist \
+  fof/oauth \
+  blt950/oauth-generic \
+  fof/passport
 
 COPY config.docker.php flarum-run ./
 

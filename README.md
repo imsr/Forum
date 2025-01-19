@@ -13,6 +13,12 @@ docker-compose.yml     0      775
 config.docker.php      1000   770
 ```
 
+```bash
+mkdir storage assets db
+chmod 770 storage assets db
+chown flarum:flarum storage assets
+```
+
 Пример `.env` (должен быть недоступен другим пользователям):
 
 ```
@@ -37,5 +43,12 @@ RUN composer require \
         flarum-lang/russian \
         fof/upload \
         fof/nightmode \
-        fof/linguist
+        fof/linguist \
+        fof/passport
+```
+
+Сборка
+
+```bash
+docker build -t ghcr.io/imsr/forum:latest .
 ```
