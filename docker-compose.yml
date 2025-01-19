@@ -2,7 +2,9 @@ services:
   web:
     image: ghcr.io/imsr/forum
     environment:
-      FLARUM_TITLE: Форум IMSR
+      UID: ${RUN_UID:-1000}
+      GID: ${RUN_GID:-1000}
+      FLARUM_TITLE: Форум imsr
       FLARUM_DB_HOST: db
       FLARUM_DB_DATABASE: flarum
       FLARUM_DB_USERNAME: ${DB_USERNAME:-flarum}

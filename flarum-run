@@ -2,7 +2,10 @@
 
 set -e
 
-mkdir -p storage/cache \
+chown "$UID:$GID" /app /data/caddy /config/caddy
+
+install -o "$UID" -g "$GID" -d \
+    storage/cache \
     storage/formatter \
     storage/less \
     storage/locale \
@@ -10,11 +13,11 @@ mkdir -p storage/cache \
     storage/sessions \
     storage/tmp \
     storage/views \
-    assets/avatars
+    public/assets/avatars
 
 if [ -e 'storage/install.lock' ]; then
     echo "Already installed"
-    cp config.docker.php config.php
+    install -o "$UID" -g "$GID" config.docker.php config.php
 else
     echo "Installing"
 
@@ -43,7 +46,7 @@ else
 
     rm $cfg
 
-    touch storage/install.lock
+    install -o "$UID" -g "$GID" /dev/null storage/install.lock
 fi
 
-frankenphp run --config /etc/caddy/Caddyfile --adapter caddyfile
+su-exec "$UID:$GID" frankenphp run --config /etc/caddy/Caddyfile --adapter caddyfile

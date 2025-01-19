@@ -14,6 +14,8 @@ config.docker.php
 Пример `.env` (должен быть недоступен другим пользователям):
 
 ```
+RUN_UID=1000
+RUN_GID=1000
 DB_USERNAME=flarum
 DB_PASSWORD=pa$$word
 LISTEN_PORT=20001
