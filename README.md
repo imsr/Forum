@@ -3,12 +3,14 @@
 Пример набора файлов и директорий для работы:
 
 ```
-/storage
-/assets
-/db
-.env
-docker-compose.yml
-config.docker.php
+имя                    uid   права
+----------------------------------
+/storage               1000   770
+/assets                1000   770
+/db                    0      770
+.env                   0      770
+docker-compose.yml     0      775
+config.docker.php      1000   770
 ```
 
 Пример `.env` (должен быть недоступен другим пользователям):
