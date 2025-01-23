@@ -17,6 +17,7 @@ services:
       - ./storage:/app/storage
       - ./assets:/app/public/assets
       - ./config.docker.php:/app/config.docker.php
+    restart: unless-stopped
     ports:
       - "127.0.0.1:${LISTEN_PORT:-20001}:80"
     depends_on:
